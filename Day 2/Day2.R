@@ -1,6 +1,6 @@
 library(dplyr)
 
-input_file <- "sample.txt"
+input_file <- "input.txt"
 input <- read.csv(input_file, header = FALSE) %>%
   as.character() %>%
   strsplit(., "-") %>%
@@ -22,12 +22,14 @@ finder <- function(x) {
       fac <- 10^(a_len / 2) + 1
       low <- ceiling(a / fac)
       high <- floor(b / fac)
-      fac * (low:high)
-    } else {
-      NA
+      if (low <= high) {
+        fac * (low:high)
+      }
     }
   } else {
     new_b <- 10^(b_len - 1) - 1
     c(finder(c(a, new_b)), finder(c(new_b + 1, b)))
   }
 }
+
+apply(input, 1, finder) %>% unlist() %>% sum() %>% print()
