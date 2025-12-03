@@ -20,3 +20,10 @@ for (i in seq_len(nrow(input))) {
   total <- total + a * 10 + b
 }
 print(total)
+
+jolt <- function(x)
+  y <- NULL
+  for (i in 1:12) {
+    a <- max(x[1:(len - 13 + i)])
+    a_ind <- which(input[i, ] == a)[1]
+  }
