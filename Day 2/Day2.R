@@ -26,7 +26,7 @@ finder <- function(x, l, p) {
     }
     if (a_len <= l && p == 2) {
       NA
-    } else if (a_len %% l == 0) {
+    } else if ((a_len %% l == 0 && p == 2) || (a_len %% 2 == 0 && p == 1)) {
       fac <- sum(10^seq(0, by = l, length.out = n))
       low <- ceiling(a / fac)
       high <- floor(b / fac)
