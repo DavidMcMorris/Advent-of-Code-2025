@@ -1,10 +1,16 @@
 library(dplyr)
 
+input_file <- "input.txt"
+
 digs <- function(x) {
   floor(log10(x)) + 1
 }
 
-input_file <- "sample.txt"
+base_10 <- function(x) {
+  tens <- rev(10^seq(0, length(x) - 1))
+  sum(x * tens)
+}
+
 len <- scan(input_file, nmax = 1) %>% digs()
 input <- readLines(input_file) %>%
   strsplit(split = "") %>%
@@ -22,11 +28,9 @@ next_bat <- function(x, l) {
   }
 }
 
-total <- 0
+total <- c(0, 0)
 for (i in seq_len(nrow(input))) {
-  a <- max(input[i, -len])
-  a_ind <- which(input[i, ] == a)[1]
-  b <- max(input[i, -(1:a_ind)])
-  total <- total + a * 10 + b
+  total[1] <- total[1] + (next_bat(input[i, ], 2) %>% base_10())
+  total[2] <- total[2] + (next_bat(input[i, ], 12) %>% base_10())
 }
-print(total)
+print(total, digits = 13)
