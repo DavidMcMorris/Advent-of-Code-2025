@@ -1,6 +1,6 @@
 library(dplyr)
 
-input_file <- "sample.txt"
+input_file <- "input.txt"
 input <- read.csv(input_file, header = FALSE) %>%
   as.character() %>%
   strsplit(., "-") %>%
@@ -18,7 +18,9 @@ finder <- function(x, l) {
   a_len <- digs(a)
   b_len <- digs(b)
   if (a_len == b_len) {
-    if (a_len %% l == 0) {
+    if (a_len <= l) {
+      NA
+    } else if (a_len %% l == 0) {
       fac <- sum(10^seq(0, by = l, length.out = a_len / l))
       low <- ceiling(a / fac)
       high <- floor(b / fac)
@@ -32,4 +34,12 @@ finder <- function(x, l) {
   }
 }
 
-apply(input, 1, function(x){finder(x,2)}) %>% unlist() %>% sum() %>% print()
+m <- floor(digs(max(input)) / 2)
+ids <- NULL
+
+for (i in 1:m) {
+  ids <- apply(input, 1, function(x) {finder(x, i)}) %>%
+    unlist() %>%
+    union(., ids)
+}
+print(sum(ids, na.rm = TRUE))
