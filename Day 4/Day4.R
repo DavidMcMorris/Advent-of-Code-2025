@@ -1,6 +1,6 @@
 library(dplyr)
 
-input_file <- "sample.txt"
+input_file <- "input.txt"
 len <- readLines(input_file, 1) %>% nchar()
 input <- read.table(input_file) %>%
   as.matrix() %>%
@@ -14,3 +14,16 @@ adjacent_inds <- function(ind, dim) {
   adj_inds <- apply(adj_dirs, 1, function(x) {x + ind}) %>% t()
   adj_inds[rowSums(adj_inds > dim | adj_inds < 1) == 0, ]
 }
+
+total <- 0
+for (i in 1:len^2) {
+  if (input[i] == "@") {
+    current_ind <- arrayInd(i, c(len, len))
+    adj_inds <- adjacent_inds(current_ind, len)
+    adj <- (input[adj_inds] == "@") %>% sum()
+    if (adj < 4) {
+      total <- total + 1
+    }
+  }
+}
+print(total)
