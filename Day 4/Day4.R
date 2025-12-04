@@ -9,8 +9,8 @@ input <- read.table(input_file) %>%
   matrix(ncol = len, byrow = TRUE)
 
 adjacent_inds <- function(ind, dim) {
-  if(ind > dim && ind %% dim > 1 && ind < dim^2 - dim) {
-    ad_inds <- c(ind, ind + 1, ind - 1) %>% c(., . + dim, . - dim)
-    ad_inds <- setdiff(ad_inds, ind)
-  } else if(ind < )
+  adj_dirs <- matrix(c(-1, -1, -1, 0, -1, 1, 0, 1), ncol = 2, byrow = TRUE) %>%
+    rbind(., -.)
+  adj_inds <- apply(adj_dirs, 1, function(x) {x + ind}) %>% t()
+  adj_inds[rowSums(adj_inds > dim | adj_inds < 1) == 0, ]
 }
