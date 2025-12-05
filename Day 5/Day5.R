@@ -40,22 +40,20 @@ overlap <- function(x, y) {
   }
 }
 
-i <- 0
+i <- 1
 n <- nrow(ranges)
-while (i < (n - 2)) {
-  i <- i + 1
+while (i < n) {
   j <- i + 1
-  n <- nrow(ranges)
   while (j <= n) {
     if (overlap(ranges[j, ], ranges[i, ])) {
       ranges[i, ] <- c(min(ranges[c(i, j), 1]), max(ranges[c(i, j), 2]))
       ranges <- ranges[-j, ]
-      j <- j - 1
       n <- n - 1
     } else {
       j <- j + 1
     }
   }
+  i <- i + 1
 }
 
 (ranges[, 2] - ranges[, 1] + 1) %>% sum() %>% print()
