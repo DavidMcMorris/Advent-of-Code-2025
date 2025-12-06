@@ -57,4 +57,16 @@ while (i < n) {
   i <- i + 1
 }
 
+ind_rem <- NULL
+i <- nrow(ranges)
+for (j in rev(seq_len(i - 1))) {
+  if (overlap(ranges[j, ], ranges[i, ])) {
+    ranges[i, ] <- c(min(ranges[c(i, j), 1]), max(ranges[c(i, j), 2]))
+    ind_rem <- c(ind_rem, j)
+  }
+}
+if (length(ind_rem) > 0) {
+  ranges <- ranges[-ind_rem, ]
+}
+
 (ranges[, 2] - ranges[, 1] + 1) %>% sum() %>% print()
