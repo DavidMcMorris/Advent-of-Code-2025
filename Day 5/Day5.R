@@ -1,6 +1,6 @@
 library(dplyr)
 
-input_file <- "sample.txt"
+input_file <- "input.txt"
 input <- readLines(input_file)
 cut <- which(input == "")
 ranges <- input[1:(cut - 1)] %>%
@@ -40,18 +40,19 @@ overlap <- function(x, y) {
   }
 }
 
-i <- 1
 n <- nrow(ranges)
+i <- 1
 while (i < n) {
-  j <- i + 1
-  while (j <= n) {
+  ind_rem <- NULL
+  for (j in (i + 1):n) {
     if (overlap(ranges[j, ], ranges[i, ])) {
       ranges[i, ] <- c(min(ranges[c(i, j), 1]), max(ranges[c(i, j), 2]))
-      ranges <- ranges[-j, ]
-      n <- n - 1
-    } else {
-      j <- j + 1
+      ind_rem <- c(ind_rem, j)
     }
+  }
+  if (length(ind_rem) > 0) {
+    ranges <- ranges[-ind_rem, ]
+    n <- nrow(ranges)
   }
   i <- i + 1
 }
