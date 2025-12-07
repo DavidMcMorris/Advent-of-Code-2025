@@ -16,8 +16,11 @@ input_2 <- input_2 %>%
   apply(., 2, paste, collapse = "") %>%
   as.numeric()
 
-n <- which(is.na(input_2))[1] - 1
-input_2 <- input_2[which(!is.na(input_2))] %>% matrix(., nrow = n)
+nas <- c(0, which(is.na(input_2)), length(input_2) + 1)
+input_2_l <- list()
+for (i in 1:(length(nas) - 1)) {
+  input_2_l[[i]] <- input_2[(nas[i] + 1):(nas[i + 1] - 1)]
+}
 
 apply(input[, -plus], 2, prod) %>% sum(., input[, plus]) %>% print()
-apply(input_2[, -plus], 2, prod) %>% sum(., input_2[, plus]) %>% print()
+sapply(input_2_l[-plus], prod) %>% sum(., unlist(input_2_l[plus])) %>% print()
