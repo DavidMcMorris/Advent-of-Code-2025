@@ -13,7 +13,6 @@ ids <- input[(cut + 1):length(input)] %>%
   as.numeric()
 
 counter <- 0
-
 while (length(ids) > 0) {
   for (j in seq_len(nrow(ranges))) {
     if (ids[1] >= ranges[j, 1] && ids[1] <= ranges[j, 2]) {
@@ -26,7 +25,6 @@ while (length(ids) > 0) {
   }
 }
 print(counter)
-
 
 overlap <- function(x, y) {
   if (x[1] >= y[1] && x[1] <= y[2]) {
@@ -51,5 +49,4 @@ for (i in seq_len(nrow(ranges))) {
 }
 
 ranges <- ranges[-ind_del, ]
-
 (ranges[, 2] - ranges[, 1] + 1) %>% sum() %>% print()
