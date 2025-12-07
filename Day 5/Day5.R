@@ -12,8 +12,6 @@ ranges <- input[1:(cut - 1)] %>%
 ids <- input[(cut + 1):length(input)] %>%
   as.numeric()
 
-rm(input)
-
 # counter <- 0
 
 # while (length(ids) > 0) {
@@ -40,33 +38,16 @@ overlap <- function(x, y) {
   }
 }
 
-n <- nrow(ranges)
-i <- 1
-while (i < n) {
-  ind_rem <- NULL
-  for (j in (i + 1):n) {
+ind_del <- NULL
+for (i in seq_len(nrow(ranges))) {
+  for (j in setdiff(seq_len(nrow(ranges)), c(i, ind_del))) {
     if (overlap(ranges[j, ], ranges[i, ])) {
       ranges[i, ] <- c(min(ranges[c(i, j), 1]), max(ranges[c(i, j), 2]))
-      ind_rem <- c(ind_rem, j)
+      ind_del <- c(ind_del, j)
     }
   }
-  if (length(ind_rem) > 0) {
-    ranges <- ranges[-ind_rem, ]
-    n <- nrow(ranges)
-  }
-  i <- i + 1
 }
 
-ind_rem <- NULL
-i <- nrow(ranges)
-for (j in rev(seq_len(i - 1))) {
-  if (overlap(ranges[j, ], ranges[i, ])) {
-    ranges[i, ] <- c(min(ranges[c(i, j), 1]), max(ranges[c(i, j), 2]))
-    ind_rem <- c(ind_rem, j)
-  }
-}
-if (length(ind_rem) > 0) {
-  ranges <- ranges[-ind_rem, ]
-}
+ranges <- ranges[-ind_del, ]
 
 (ranges[, 2] - ranges[, 1] + 1) %>% sum() %>% print()
