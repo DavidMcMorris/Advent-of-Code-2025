@@ -39,7 +39,7 @@ overlap <- function(x, y) {
 }
 
 ind_del <- NULL
-for (i in seq_len(nrow(ranges))) {
+for (i in setdiff(seq_len(nrow(ranges)), ind_del)) {
   for (j in setdiff(seq_len(nrow(ranges)), c(i, ind_del))) {
     if (overlap(ranges[j, ], ranges[i, ])) {
       ranges[i, ] <- c(min(ranges[c(i, j), 1]), max(ranges[c(i, j), 2]))
