@@ -12,20 +12,20 @@ ranges <- input[1:(cut - 1)] %>%
 ids <- input[(cut + 1):length(input)] %>%
   as.numeric()
 
-# counter <- 0
+counter <- 0
 
-# while (length(ids) > 0) {
-#   for (j in seq_len(nrow(ranges))) {
-#     if (ids[1] >= ranges[j, 1] && ids[1] <= ranges[j, 2]) {
-#       counter <- counter + 1
-#       ids <- ids[-1]
-#       break
-#     } else if (j == nrow(ranges)) {
-#       ids <- ids[-1]
-#     }
-#   }
-# }
-# print(counter)
+while (length(ids) > 0) {
+  for (j in seq_len(nrow(ranges))) {
+    if (ids[1] >= ranges[j, 1] && ids[1] <= ranges[j, 2]) {
+      counter <- counter + 1
+      ids <- ids[-1]
+      break
+    } else if (j == nrow(ranges)) {
+      ids <- ids[-1]
+    }
+  }
+}
+print(counter)
 
 
 overlap <- function(x, y) {
@@ -39,11 +39,13 @@ overlap <- function(x, y) {
 }
 
 ind_del <- NULL
-for (i in setdiff(seq_len(nrow(ranges)), ind_del)) {
-  for (j in setdiff(seq_len(nrow(ranges)), c(i, ind_del))) {
-    if (overlap(ranges[j, ], ranges[i, ])) {
-      ranges[i, ] <- c(min(ranges[c(i, j), 1]), max(ranges[c(i, j), 2]))
-      ind_del <- c(ind_del, j)
+for (i in seq_len(nrow(ranges))) {
+  if (!(i %in% ind_del)) {
+    for (j in setdiff(seq_len(nrow(ranges)), c(i, ind_del))) {
+      if (overlap(ranges[j, ], ranges[i, ])) {
+        ranges[i, ] <- c(min(ranges[c(i, j), 1]), max(ranges[c(i, j), 2]))
+        ind_del <- c(ind_del, j)
+      }
     }
   }
 }
