@@ -3,7 +3,8 @@ library(dplyr)
 input_file <- "input.txt"
 input <- readLines(input_file)
 len <- nchar(input[[1]])
-input <- input %>% strsplit(split="") %>%
+input <- input %>%
+  strsplit(split = "") %>%
   unlist() %>%
   matrix(ncol = len, byrow = TRUE)
 
