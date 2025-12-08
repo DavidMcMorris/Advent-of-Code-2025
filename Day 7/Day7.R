@@ -7,8 +7,10 @@ input <- input %>%
   strsplit(split = "") %>%
   unlist() %>%
   matrix(ncol = len, byrow = TRUE)
-input[input == "S"] <- "|"
+start <- which(input == "S")
+input[start] <- "|"
 dims <- dim(input)
+visited <- rep(0, length(input))
 
 next_line <- function(x, y) {
   for (i in seq_along(x)) {
@@ -45,4 +47,8 @@ for (i in seq_len(dims[1])) {
       adj_mat[(j - 1) * dims[1] + i - 1, j * dims[1] + i] <- 1
     }
   }
+}
+
+while (sum(visited) < sum(input == "|")) {
+  
 }
