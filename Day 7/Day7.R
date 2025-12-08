@@ -1,14 +1,14 @@
 library(dplyr)
 
-input_file <- "input.txt"
+input_file <- "sample.txt"
 input <- readLines(input_file)
 len <- nchar(input[[1]])
 input <- input %>%
   strsplit(split = "") %>%
   unlist() %>%
   matrix(ncol = len, byrow = TRUE)
-
 input[input == "S"] <- "|"
+dims <- dim(input)
 
 next_line <- function(x, y) {
   for (i in seq_along(x)) {
@@ -22,9 +22,27 @@ next_line <- function(x, y) {
   y
 }
 
-for (i in 1:(nrow(input) - 1)) {
+for (i in 1:(dims[1] - 1)) {
   input[i + 1, ] <- next_line(input[i, ], input[i + 1, ])
 }
 
 splitters <- which(input == "^")
 sum(input[splitters - 1] == "|") %>% print()
+
+adj_mat <- matrix(0, nrow = length(input), ncol = length(input))
+for (j in seq_len(dims[2])) {
+  for (i in 1:(dims[1] - 1)) {
+    if (identical(input[i:(i + 1), j], c("|", "|"))) {
+      adj_mat[(j - 1) * dims[1] + i, (j - 1) * dims[1] + i + 1] <- 1
+    }
+  }
+}
+for (i in seq_len(dims[1])) {
+  for (j in 1:(dims[2] - 1)) {
+    if (identical(input[i, j:(j + 1)], c("|", "^"))) {
+      adj_mat[j * dims[1] + i - 1, (j - 1) * dims[1] + i] <- 1
+    } else if (identical(input[i, j:(j + 1)], c("^", "|"))) {
+      adj_mat[(j - 1) * dims[1] + i - 1, j * dims[1] + i] <- 1
+    }
+  }
+}
