@@ -31,10 +31,12 @@ for (i in 1:(dims[1] - 1)) {
 splitters <- which(input == "^")
 sum(input[splitters - 1] == "|") %>% print()
 
-splitter_inds <- arrayInd(which(input == "^"), dims)
+nodes <- c(splitters, seq(nrow(input), length(input), by = nrow(input)))
+splitter_inds <- arrayInd(nodes, dims)
 splitter_inds <- splitter_inds[order(splitter_inds[, 1]), ]
+num_nodes <- nrow(splitter_inds)
 
-adj_mat <- matrix(0, nrow = nrow(splitter_inds), ncol = nrow(splitter_inds))
+adj_mat <- matrix(0, nrow = num_nodes, ncol = num_nodes)
 
 for (i in seq_along(splitter_inds[, 1])) {
   below_cond <- splitter_inds[, 1] > splitter_inds[i, 1]
@@ -49,3 +51,5 @@ for (i in seq_along(splitter_inds[, 1])) {
     adj_mat[i, below_r[1]] <- 1
   }
 }
+
+visited <- rep(0, nrow(splitter_inds))
