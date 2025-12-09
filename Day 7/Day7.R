@@ -1,6 +1,6 @@
 library(dplyr)
 
-input_file <- "input.txt"
+input_file <- "sample.txt"
 input <- readLines(input_file)
 len <- nchar(input[[1]])
 input <- input %>%
@@ -52,39 +52,29 @@ for (i in seq_along(node_inds[, 1])) {
   }
 }
 
-visited <- rep(FALSE, nrow(node_inds))
 num_paths <- rep(0, num_nodes)
 
-paths <- 0
 dfs <- function(node) {
-  if (visited[node]) {
-    break
+  paths <- 0
+# print(sum(num_paths > 0))
+  if (node > (length(nodes) - nrow(input) + 1)) {
+    paths <- paths + 1
+    return(paths)
+  }
+  if (num_paths[node] > 0) {
+    paths <- paths + num_paths[node]
+    return(paths)
   } else {
-    if (node > (length(nodes) - nrow(input) + 1)) {
-      paths <<- paths + 1
-      # print(paths)
-    }
-    if (num_paths[node] > 0) {
-      paths <<- paths + num_paths[node]
-      paths
-      print("M")
-    } else {
-      visited[node] <- TRUE
-      visited_current <- visited
-      neighbors <- which(adj_mat[node, ] == 1)
-      for (i in neighbors) {
-        num_paths[which(nodes == i)] <<- dfs(i)
-        visited <- visited_current
-      }
+    visited[node] <- TRUE
+    visited_current <- visited
+    neighbors <- which(adj_mat[node, ] == 1)
+    for (i in neighbors) {
+      print(i)
+      num_paths[i] <<- num_paths[i] + dfs(i)
+      visited <<- visited_current
     }
   }
   paths
 }
 
-total <- 0
-for (i in rev(seq_along(nodes))) {
-  print(i)
-  paths <- 0
-  dfs(i)
-}
-# dfs(1) %>% print
+dfs(1) %>% print()
