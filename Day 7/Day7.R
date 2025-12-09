@@ -59,8 +59,9 @@ dfs <- function(node) {
   if (visited[node]) {
     break
   } else {
-    if(node > (length(nodes) - nrow(input) + 1)) {
+    if (node > (length(nodes) - nrow(input) + 1)) {
       paths <<- paths + 1
+      print(paths)
     }
     visited[node] <- TRUE
     visited_current <- visited
