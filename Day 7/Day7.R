@@ -1,11 +1,9 @@
-library(dplyr)
-
-input_file <- "sample.txt"
+input_file <- "input.txt"
 input <- readLines(input_file)
 len <- nchar(input[[1]])
-input <- input %>%
-  strsplit(split = "") %>%
-  unlist() %>%
+input <- input |>
+  strsplit(split = "") |>
+  unlist() |>
   matrix(ncol = len, byrow = TRUE)
 start <- which(input == "S")
 input[start] <- "|"
@@ -17,8 +15,7 @@ next_line <- function(x, y) {
     if (identical(c(x[i], y[i]), c("|", "."))) {
       y[i] <- "|"
     } else if (identical(c(x[i], y[i]), c("|", "^"))) {
-      y[i - 1] <- "|"
-      y[i + 1] <- "|"
+      y[c(i - 1, i + 1)] <- "|"
     }
   }
   y
@@ -29,7 +26,7 @@ for (i in 1:(dims[1] - 1)) {
 }
 
 splitters <- which(input == "^")
-sum(input[splitters - 1] == "|") %>% print()
+sum(input[splitters - 1] == "|") |> print()
 
 nodes <- c(splitters, seq(nrow(input), length(input), by = nrow(input)))
 node_inds <- arrayInd(nodes, dims)
@@ -54,27 +51,20 @@ for (i in seq_along(node_inds[, 1])) {
 
 num_paths <- rep(0, num_nodes)
 
-dfs <- function(node) {
+path_counter <- function(node) {
   paths <- 0
-# print(sum(num_paths > 0))
   if (node > (length(nodes) - nrow(input) + 1)) {
     paths <- paths + 1
-    return(paths)
-  }
-  if (num_paths[node] > 0) {
+  } else if (num_paths[node] > 0) {
     paths <- paths + num_paths[node]
-    return(paths)
   } else {
-    visited[node] <- TRUE
-    visited_current <- visited
     neighbors <- which(adj_mat[node, ] == 1)
     for (i in neighbors) {
-      print(i)
-      num_paths[i] <<- num_paths[i] + dfs(i)
-      visited <<- visited_current
+      paths <- paths + path_counter(i)
     }
   }
+  num_paths[node] <<- paths
   paths
 }
 
-dfs(1) %>% print()
+path_counter(1) |> print(digits = 20)
