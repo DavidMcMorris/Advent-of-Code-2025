@@ -35,3 +35,17 @@ splitter_inds <- arrayInd(which(input == "^"), dims)
 splitter_inds <- splitter_inds[order(splitter_inds[, 1]), ]
 
 adj_mat <- matrix(0, nrow = nrow(splitter_inds), ncol = nrow(splitter_inds))
+
+for (i in seq_along(splitter_inds[, 1])) {
+  below_cond <- splitter_inds[, 1] > splitter_inds[i, 1]
+  left_cond <- splitter_inds[, 2] == splitter_inds[i, 2] - 1
+  right_cond <- splitter_inds[, 2] == splitter_inds[i, 2] + 1
+  below_l <- which(below_cond & left_cond)
+  below_r <- which(below_cond & right_cond)
+  if (length(below_l) > 0) {
+    adj_mat[i, below_l[1]] <- 1
+  }
+  if (length(below_r) > 0) {
+    adj_mat[i, below_r[1]] <- 1
+  }
+}
