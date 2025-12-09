@@ -31,24 +31,7 @@ for (i in 1:(dims[1] - 1)) {
 splitters <- which(input == "^")
 sum(input[splitters - 1] == "|") %>% print()
 
-adj_mat <- matrix(0, nrow = length(input), ncol = length(input))
-for (j in seq_len(dims[2])) {
-  for (i in 1:(dims[1] - 1)) {
-    if (identical(input[i:(i + 1), j], c("|", "|"))) {
-      adj_mat[(j - 1) * dims[1] + i, (j - 1) * dims[1] + i + 1] <- 1
-    }
-  }
-}
-for (i in seq_len(dims[1])) {
-  for (j in 1:(dims[2] - 1)) {
-    if (identical(input[i, j:(j + 1)], c("|", "^"))) {
-      adj_mat[j * dims[1] + i - 1, (j - 1) * dims[1] + i] <- 1
-    } else if (identical(input[i, j:(j + 1)], c("^", "|"))) {
-      adj_mat[(j - 1) * dims[1] + i - 1, j * dims[1] + i] <- 1
-    }
-  }
-}
+splitter_inds <- arrayInd(which(input == "^"), dims)
+splitter_inds <- splitter_inds[order(splitter_inds[, 1]), ]
 
-while (sum(visited) < sum(input == "|")) {
-  
-}
+adj_mat <- matrix(0, nrow = nrow(splitter_inds), ncol = nrow(splitter_inds))
