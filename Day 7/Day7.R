@@ -52,4 +52,17 @@ for (i in seq_along(splitter_inds[, 1])) {
   }
 }
 
-visited <- rep(0, nrow(splitter_inds))
+visited <- rep(FALSE, nrow(splitter_inds))
+
+dfs <- function(node) {
+  if (visited[node]) {
+    break
+  } else {
+    visited[node] <- TRUE
+    print(node)
+    neighbors <- which(adj_mat[node, ] == 1)
+    for (i in neighbors) {
+      dfs(i)
+    }
+  }
+}
