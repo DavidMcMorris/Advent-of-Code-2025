@@ -1,4 +1,4 @@
-input_file <- "sample.txt"
+input_file <- "input.txt"
 input <- read.csv(input_file, header = FALSE) |> as.matrix()
 
 area <- function(a, b) {
@@ -8,11 +8,12 @@ area <- function(a, b) {
 }
 
 max_area <- 0
-for (i in seq_len(nrow(input))) {
-  for (j in seq_len(nrow(input))) {
+for (i in 1:(nrow(input) - 1)) {
+  for (j in (i + 1):nrow(input)) {
     max_area <- max(max_area, area(input[i, ], input[j, ]))
   }
 }
+print(max_area)
 
 input <- rbind(input, input[1, ])
 boundary <- NULL
