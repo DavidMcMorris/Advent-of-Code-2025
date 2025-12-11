@@ -65,6 +65,7 @@ for (i in 1:(nrow(input) - 1)) {
         # print(cross)
         if (cross %% 2 == 0) {
           flag <- 1
+          break
         }
       }
     }
