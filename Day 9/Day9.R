@@ -57,20 +57,22 @@ max_area <- 0
 for (i in 1:(nrow(input) - 1)) {
   for (j in (i + 1):nrow(input)) {
     print(c(i, j))
-    flag <- 0
-    outline <- area_bound(input[i, ], input[j, ])
-    for (k in seq_len(nrow(outline))) {
-      if (!is_row(boundary, outline[k, ])) {
-        cross <- sum(boundary[which(boundary[, 2] == outline[k, 2]), 1] > outline[k, 1])
-        # print(cross)
-        if (cross %% 2 == 0) {
-          flag <- 1
-          break
+    next_area <- area(as.vector(input[i, ]), as.vector(input[j, ]))
+    if (next_area > max_area) {
+      flag <- 0
+      outline <- area_bound(input[i, ], input[j, ])
+      for (k in seq_len(nrow(outline))) {
+        if (!is_row(boundary, outline[k, ])) {
+          cross <- sum(boundary[which(boundary[, 2] == outline[k, 2]), 1] > outline[k, 1])
+          if (cross %% 2 == 0) {
+            flag <- 1
+            break
+          }
         }
       }
-    }
-    if (flag == 0) {
-      max_area <- max(max_area, area(input[i, ], input[j, ]))
+      if (flag == 0) {
+        max_area <- next_area
+      }
     }
   }
 }
