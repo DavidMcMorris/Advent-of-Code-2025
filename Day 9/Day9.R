@@ -19,6 +19,7 @@ for (i in 1:(nrow(input) - 1)) {
   }
 }
 boundary <- rbind(boundary, input[1, ])
+colnames(boundary) <- NULL
 
 area_bound <- function(a, b) {
   if (a[1] == b[1]) {
@@ -51,7 +52,20 @@ area_bound <- function(a, b) {
 max_area <- 0
 for (i in 1:(nrow(input) - 1)) {
   for (j in (i + 1):nrow(input)) {
-    max_area <- max(max_area, area(input[i, ], input[j, ]))
+    flag <- 0
+    outline <- area_bound(input[i, ], input[j, ])
+    for (k in seq_len(nrow(outline))) {
+      if (length(boundary[boundary[,1] == outline[k, 1] & boundary[, 2] == outline[k, 2],]) > 0) {
+        cross <- sum(boundary[which(boundary[, 2] == outline[k, 2]), 1] > outline[k, 1])
+        print(cross)
+        if (cross != 0 && cross %% 2 == 0) {
+          flag <- 1
+        }
+      }
+    }
+    if (flag == 0) {
+      max_area <- max(max_area, area(input[i, ], input[j, ]))
+    }
   }
 }
 print(max_area)
