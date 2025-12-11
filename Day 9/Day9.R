@@ -21,24 +21,31 @@ for (i in 1:(nrow(input) - 1)) {
 boundary <- rbind(boundary, input[1, ])
 
 area_bound <- function(a, b) {
-  ne <- c(max(a[1], b[1]), min(a[2], b[2]))
-  nw <- c(min(a[1], b[1]), ne[2])
-  se <- c(ne[1], max(a[2], b[2]))
-  sw <- c(nw[1], se[2])
-  coord <- ne
-  print(coord)
-  while (!identical(coord, ne + c(0, 1))) {
-    if (coord[2] == nw[2] && coord[1] > nw[1]) {
-      coord[1] <- coord[1] - 1
-    } else if (coord[1] == nw[1] && coord[2] >= nw[2] && coord[2] < sw[2]) {
-      coord[2] <- coord[2] + 1
-    } else if (coord[2] == sw[2] && coord[1] >= sw[1] && coord[1] < se[1]) {
-      coord[1] <- coord[1] + 1
-    } else if (coord[1] == se[1] && coord[2] <= se[2]) {
-      coord[2] <- coord[2] - 1
+  if (a[1] == b[1]) {
+    coord_mat <- cbind(a[1], a[2]:b[2])
+  } else if (a[2] == b[2]) {
+    coord_mat <- cbind(a[1]:b[1], a[2])
+  } else {
+    ne <- c(max(a[1], b[1]), min(a[2], b[2]))
+    nw <- c(min(a[1], b[1]), ne[2])
+    se <- c(ne[1], max(a[2], b[2]))
+    sw <- c(nw[1], se[2])
+    coord <- ne
+    coord_mat <- coord
+    while (!identical(coord, ne + c(0, 1))) {
+      if (coord[2] == nw[2] && coord[1] > nw[1]) {
+        coord[1] <- coord[1] - 1
+      } else if (coord[1] == nw[1] && coord[2] >= nw[2] && coord[2] < sw[2]) {
+        coord[2] <- coord[2] + 1
+      } else if (coord[2] == sw[2] && coord[1] >= sw[1] && coord[1] < se[1]) {
+        coord[1] <- coord[1] + 1
+      } else if (coord[1] == se[1] && coord[2] <= se[2]) {
+        coord[2] <- coord[2] - 1
+      }
+      coord_mat <- rbind(coord_mat, coord, deparse.level = 0)
     }
-    print(coord)
   }
+  coord_mat
 }
 
 max_area <- 0
