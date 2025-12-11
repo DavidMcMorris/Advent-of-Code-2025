@@ -1,10 +1,14 @@
-input_file <- "sample.txt"
+input_file <- "input.txt"
 input <- read.csv(input_file, header = FALSE) |> as.matrix()
 
 area <- function(a, b) {
   dx <- abs(a[1] - b[1]) + 1
   dy <- abs(a[2] - b[2]) + 1
   dx * dy
+}
+
+is_row <- function(m, r) {
+  (((m[, 1] == r[1]) + (m[, 2] == r[2])) == 2) |> sum() |> as.logical()
 }
 
 input <- rbind(input, input[1, ])
@@ -52,13 +56,14 @@ area_bound <- function(a, b) {
 max_area <- 0
 for (i in 1:(nrow(input) - 1)) {
   for (j in (i + 1):nrow(input)) {
+    print(c(i, j))
     flag <- 0
     outline <- area_bound(input[i, ], input[j, ])
     for (k in seq_len(nrow(outline))) {
-      if (length(boundary[boundary[,1] == outline[k, 1] & boundary[, 2] == outline[k, 2],]) > 0) {
+      if (!is_row(boundary, outline[k, ])) {
         cross <- sum(boundary[which(boundary[, 2] == outline[k, 2]), 1] > outline[k, 1])
-        print(cross)
-        if (cross != 0 && cross %% 2 == 0) {
+        # print(cross)
+        if (cross %% 2 == 0) {
           flag <- 1
         }
       }
