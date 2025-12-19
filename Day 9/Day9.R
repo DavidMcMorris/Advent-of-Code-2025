@@ -69,10 +69,11 @@ for (i in 1:(nrow(input) - 1)) {
             cross <- cross_list[[lab]]
           } else {
             cross <- sum(boundary[which(boundary[, 2] == outline[k, 2]), 1] > outline[k, 1])
-            if (cross %% 2 == 0) {
-              flag <- 1
-              break
-            }
+            cross_list[[lab]] <- cross
+          }
+          if (cross %% 2 == 0) {
+            flag <- 1
+            break
           }
         }
       }
