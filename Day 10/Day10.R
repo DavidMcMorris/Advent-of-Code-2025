@@ -17,4 +17,23 @@ for (i in seq_along(input)) {
 }
 
 n <- machines[[1]]$n
-verts <- intToBin(0:((2^n) - 1)) |> str_pad(n, side = "left", pad = "0")
+verts <- intToBin(0:((2^n) - 1)) |>
+  str_pad(n, side = "left", pad = "0") |>
+  strsplit("")
+adj_mat <- matrix(0, nrow = 2^n, ncol = 2^n)
+
+b <- machines[[1]]$buttons %>% gsub("\\D", "", .)
+for (i in seq_along(b)) {
+  inds <- (b[i] |> strsplit(split = ""))[[1]] |> as.numeric()
+  inds <- (inds + 1) |> as.integer()
+  for (j in 1:(length(verts) - 1)) {
+    j_config <- grep("1", verts[[j]])
+    for (k in (j + 1):(length(verts) - 1)) {
+      k_config <- grep("1", verts[[k]])
+      if (identical(inds, symdiff(j_config, k_config))) {
+        adj_mat[i, j] <- 1
+        adj_mat[j, i] <- 1
+      }
+    }
+  }
+}
