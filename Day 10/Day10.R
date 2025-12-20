@@ -1,4 +1,4 @@
-require(R.utils, stringr)
+require(R.utils, stringr, dplyr)
 
 input_file <- "sample.txt"
 input <- readLines(input_file) |> strsplit(split = " ")
@@ -7,10 +7,13 @@ machines <- list()
 
 for (i in seq_along(input)) {
   n <- nchar(input[[i]][1]) - 2
-  l <- which((input[[i]][1] |> strsplit(split = ""))[[1]] == "#")
+  l <- input[[i]][1] %>%
+    gsub("#", "1", .) %>%
+    gsub("\\.", "0", .) %>%
+    gsub("[][]", "", .)
   b <- input[[i]][-c(1, length(input[[i]]))]
   j <- input[[i]][length(input[[i]])]
-  machines[[i]] <- list("n" = n, "lights" = l - 2, "buttons" = b, "joltage" = j)
+  machines[[i]] <- list("n" = n, "lights" = l, "buttons" = b, "joltage" = j)
 }
 
 n <- machines[[1]]$n
