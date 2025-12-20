@@ -25,6 +25,15 @@ for (i in 1:(nrow(input) - 1)) {
 boundary <- rbind(boundary, input[1, ])
 colnames(boundary) <- NULL
 
+max_area <- 0
+for (i in 1:(nrow(input) - 1)) {
+  for (j in (i + 1):nrow(input)) {
+    max_area <- max(max_area, area(input[i, ], input[j, ]))
+  }
+}
+print(max_area)
+
+
 area_bound <- function(a, b) {
   if (a[1] == b[1]) {
     coord_mat <- cbind(a[1], a[2]:b[2])
@@ -62,6 +71,7 @@ for (i in 1:(nrow(input) - 1)) {
     if (next_area > max_area) {
       flag <- 0
       outline <- area_bound(input[i, ], input[j, ])
+      outline <- outline[sample(nrow(outline)), ]
       for (k in seq_len(nrow(outline))) {
         if (!is_row(boundary, outline[k, ])) {
           lab <- paste(outline[k, 1], outline[k, 2], sep = "_")
