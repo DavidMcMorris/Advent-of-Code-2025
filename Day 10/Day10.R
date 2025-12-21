@@ -42,7 +42,6 @@ graph_maker <- function(m) {
 
 d <- 0
 for (i in seq_along(machines)) {
-  print(i)
   gm <- graph_maker(i)
   g <- gm[[1]] |> graph_from_adjacency_matrix()
   verts <- gm[[2]]
